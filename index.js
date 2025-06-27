@@ -28,35 +28,33 @@ app.post('/register-device', (req, res) => {
 
 // Endpoint to send a message to Firebase and then to the Android app
 app.post('/send-message', async (req, res) => {
-  const { title, body } = req.body;
-
-  if (!title || !body) {
-    return res.status(400).json({ error: 'Title and body are required' });
-  }
-
-  if (deviceTokens.size === 0) {
-    return res.status(400).json({ error: 'No registered device tokens' });
-  }
-
-  const message = {
-    notification: {
-      title,
-      body,
-    },
-    tokens: Array.from(deviceTokens), // Send to all registered device tokens
-  };
-
-  try {
-    const response = await admin.messaging().sendToDevice(Array.from(deviceTokens), message);
-    return res.status(200).json({
-      message: 'Message sent successfully',
-      response,
-    });
-  } catch (error) {
-    console.error('Error sending message:', error);
-    return res.status(500).json({ error: 'Failed to send message', details: error.message });
-  }
-});
+    const { title, body } = req.body;
+  
+    if (!title || !body) {
+      return res.status(400).json({ error: 'Title and body are required' });
+    }
+  
+    if (deviceTokens.size === 0) {
+      return res.status(400).json({ error: 'No registered device tokens' });
+    }
+  
+    try {
+      const response = await admin.messaging().sendToDevice(Array.from(deviceTokens), {
+        notification: {
+          title,
+          body,
+        },
+      });
+  
+      return res.status(200).json({
+        message: 'Message sent successfully',
+        response,
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      return res.status(500).json({ error: 'Failed to send message', details: error.message });
+    }
+  });
 
 // Start the server
 const PORT = 3000;
