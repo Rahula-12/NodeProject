@@ -39,11 +39,12 @@ app.post('/send-message', async (req, res) => {
     }
   
     try {
-      const response = await admin.messaging().sendToDevice("3ehj983rh2hjdewfliwflIFIUWHFUWEICBUIIUECFI", {
+      const response = await admin.messaging().sendMulticast({
         notification: {
           title,
           body,
         },
+        tokens:deviceTokens.size > 0 ? Array.from(deviceTokens) : [], // Convert Set to Array
       });
   
       return res.status(200).json({
