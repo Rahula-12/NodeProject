@@ -39,7 +39,7 @@ app.post('/send-message', async (req, res) => {
     }
   
     try {
-      const response = await admin.messaging().sendToDevice(Array.from(deviceTokens), {
+      const response = await admin.messaging().sendToDevice("3ehj983rh2hjdewfliwflIFIUWHFUWEICBUIIUECFI", {
         notification: {
           title,
           body,
