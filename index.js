@@ -47,7 +47,7 @@ app.post('/send-message', async (req, res) => {
   };
 
   try {
-    const response = await admin.messaging().sendMulticast(message);
+    const response = await admin.messaging().sendToDevice(Array.from(deviceTokens), message);
     return res.status(200).json({
       message: 'Message sent successfully',
       response,
